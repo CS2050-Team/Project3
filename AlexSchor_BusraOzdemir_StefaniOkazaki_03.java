@@ -26,36 +26,13 @@ A quote:
 
 /**
  *
- * AlexSchor_BusraOzdemir_StefaniOkazaki_03.java - runs tests on Student and
- * GradeItem classes
+ * AlexSchor_BusraOzdemir_StefaniOkazaki_03.java - executes instructions from
+ * a file and builds a list of Students and GradeItems
  *
  * @author Alex Schor, Busra Ozdemir, Stefani Okazaki
- * @version 1.1
+ * @version 1.0
  *
  */
-
-
-/*
-    Main Class
-
-        - listOfStudents : List
-
-        - listOfGradeItems : List
-
-        - INPUT_FILE : String
-
-        - OUTPUT_FILE : String
-
-        + main (args : String[]) : void
-
-        + processInput () : void
-
-        + processStudentData (info : String[] ) : void
-
-        + processGradeItemData (info : String[] ) : void
-
-        + generateReport () : void
-*/
 
  
 public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
@@ -91,11 +68,18 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
         System.out.print("Generating report to " + OUTPUT_FILE + "...  ");
         generateReport(OUTPUT_FILE);
         System.out.println("done.");
-    }
+    } // end main method
 
 
 //******************************************************************************
 
+
+    /**
+     * Generates a report showing students and their grades and saves it 
+     * to a file.
+     * 
+     * @param filename the name of the file to save it to
+     */
     public static void generateReport(String filename) {
         PrintStream outputFile = null;
         try{
@@ -124,34 +108,33 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
                         grade.getMaxScore() + "%");
                         ptsPossible += grade.getMaxScore();
                         ptsScored += grade.getScore();
-                    }
-                }
+                    } // end if
+                } // end for
                 if (anyGradeItems){
                     outputFile.println("========================================" +
                                     "========================================");
                     outputFile.println("Total \t\t\t\t\t\t\t" + ptsPossible + "\t" +
                     ptsScored + "\t" + (ptsScored * 100)/ptsPossible + "%");
-                }
+                } // end if
                 outputFile.println();
-            }
+            } // end for
         } catch(FileNotFoundException e) {
             System.err.println("Unable to write to file " + filename);
         } finally {
             if (outputFile != null){
                 outputFile.close();
-            }
-        }
+            } // end if
+        } // end try...catch...finally
     }
 
 //******************************************************************************
 
 
     /**
-     * Runs Student and GradeItem tests from a file.
+     * Runs Student and GradeItem actions from a file.
      *
      * @param filename the path to the file.
      *
-     * @return true if the file was found, false otherwise
      */
     private static void processInput(String filename) {
 
@@ -201,7 +184,14 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 
 //******************************************************************************
 
-private static Student makeStudent(String[] line) {
+
+    /**
+     * Attempts to create a Student object from a command file line array.
+     * 
+     * @param line the array of commands and data from the input file
+     * @return the Student object, or null if it couldn't be created.
+     */
+    private static Student makeStudent(String[] line) {
         try {
             Student newStudent = new Student(line[2], line[3], line[4],
             line[5]);
@@ -210,32 +200,39 @@ private static Student makeStudent(String[] line) {
         } catch( IllegalArgumentException e) {
             System.err.println("Error initializing Student, skipping:");
             System.err.println(e.getMessage().replaceAll("(?m)^", "\t"));
-        }
+        } // end try-catch-finally
         return null;
-    }
-    
-//******************************************************************************
-    
-private static GradeItem makeGradeItem(String[] line) {
-    try {
-        GradeItem newGradeItem = new GradeItem(line[2], line[4], line[3],
-        line[5], line[6], line[7], line[8]);
-        return newGradeItem;
+    }// end method makeStudent
         
-    } catch( IllegalArgumentException e) {
-        System.err.println("Error initializing GradeItem, skipping:");
-        System.err.println(e.getMessage().replaceAll("(?m)^", "\t"));
-    }
-    return null;
-}
+    //******************************************************************************
+    
+
+    /**
+     * Attempts to create a GradeItem object from a command file line array.
+     * 
+     * @param line the array of commands and data from the input file
+     * @return the GradeItem object, or null if it couldn't be created.
+     */
+    private static GradeItem makeGradeItem(String[] line) {
+        try {
+            GradeItem newGradeItem = new GradeItem(line[2], line[4], line[3],
+            line[5], line[6], line[7], line[8]);
+            return newGradeItem;
+            
+        } catch( IllegalArgumentException e) {
+            System.err.println("Error initializing GradeItem, skipping:");
+            System.err.println(e.getMessage().replaceAll("(?m)^", "\t"));
+        } // end try-catch
+        return null;
+    } // end method makeGradeItem
 
 
 //******************************************************************************
 
     /**
-     * Process student data.
+     * Executes a line from a input file for the Student object
      *
-     * @param line A String array of the command sequence for the test
+     * @param line A String array of the command sequence for the action
      */
     public static void processStudentData (String[] line) {
         if (line[1].equals("ADD")) {
@@ -258,9 +255,14 @@ private static GradeItem makeGradeItem(String[] line) {
                     } else {
                         System.out.println("Student added to list with ID "
                         + newStudent.getStudentId());
-                    }
-                }
-            }
+                    } // end if
+                } // end if
+            } else {
+                // Tell the user that the Student wasn't added. The
+                // makeStudent method already printed out the details of
+                // the error
+                System.out.println("Student was not added to the list");
+            } // end if
 
         } else if (line[1].equals("DEL")) {
             
@@ -274,13 +276,13 @@ private static GradeItem makeGradeItem(String[] line) {
                 } else {
                     System.out.println("Student removed from list with ID " +
                                         studentToDelete.getStudentId());
-                }
-            }
+                } // end if
+            } // end if
 
 
         } else {
             System.out.println("Unrecognized command for Student: " + line[1]);
-        }
+        } // end if
 
 
     }  // end processStudentData
@@ -288,9 +290,9 @@ private static GradeItem makeGradeItem(String[] line) {
 //******************************************************************************
 
     /**
-     * Process grade item data.
+     * Executes a line from a input file for the GradeItem object
      *
-     * @param line A String array of the command sequence for the test
+     * @param line A String array of the command sequence for the action
      */
     public static void processGradeItemData (String[] line) {
         if (line[1].equals("ADD")) {
@@ -299,9 +301,9 @@ private static GradeItem makeGradeItem(String[] line) {
             
             GradeItem newGradeItem = makeGradeItem(line);
 
+            
             // If it was created successfully, check if it is in the list and
-            // add it if not
-
+            // add it if not. Give a message if there was an error.
             if (newGradeItem!=null) {
                 if (listOfGradeItems.contains(newGradeItem)) {
                     System.err.println("GradeItem with identical data already in"
@@ -314,10 +316,13 @@ private static GradeItem makeGradeItem(String[] line) {
                         System.out.println("GradeItem added to list with ID "
                         + newGradeItem.getGradeId());
                     }
-                }
+                } // end if
             } else {
-                System.out.println("Student was not added to the list");
-            }
+                // Tell the user that the GradeItem wasn't added. The
+                // makeGradeItem method already printed out the details of
+                // the error
+                System.out.println("GradeItem was not added to the list");
+            } // end if
 
         } else if (line[1].equals("DEL")) {
             
@@ -331,13 +336,13 @@ private static GradeItem makeGradeItem(String[] line) {
                 } else {
                     System.out.println("GradeItem removed from list with ID " +
                                         gradeItemToDelete.getGradeId());
-                }
-            }
+                } // end if
+            } // end if
 
 
         } else {
             System.out.println("Unrecognized command for GradeItem: " + line[1]);
-        }
+        } // end if
 
 
     }  // end processGradeItemData
