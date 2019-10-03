@@ -16,12 +16,11 @@ Development Environment (Alex):
     Hardware: HP Chromebook 11
 
 A non-computer vocabulary word and its meaning:
-    Afforest (verb) - to establish a forest on land which was previously
-                     unforested
+    Perquisite (noun) - benefit or perk
 
 A quote:
-    "Things that are impossible just take longer."
-        - Ian Hickson (Still alive, age not available on Internet)
+    “We May Encounter Many Defeats But We Must Not Be Defeated."
+        – Maya Angelou, 1928 - 2014
 */
 
 
@@ -88,9 +87,8 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
         
         processInput(INPUT_FILE);
 
-        OUTPUT_FILE = "Generating report to Project_03_Output" + file_suffix +
-                        ".txt...  ";
-        System.out.print(OUTPUT_FILE);
+        OUTPUT_FILE = "Project_03_Output" + file_suffix + ".txt";
+        System.out.print("Generating report to " + OUTPUT_FILE + "...  ");
         generateReport(OUTPUT_FILE);
         System.out.println("done.");
     }
@@ -99,17 +97,19 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 //******************************************************************************
 
     public static void generateReport(String filename) {
+        PrintStream outputFile = null;
         try{
-            PrintStream outputFile = new PrintStream(filename);
+            outputFile = new PrintStream(filename);
             Student[] students = listOfStudents.toArray(new Student[]{});
             GradeItem[] gradeItems = listOfGradeItems.toArray(new GradeItem[]{});
-            outputFile.println("========================================" +
-            "========================================");
+
             for (Student student : students) {
                 outputFile.println(student.getStudentId() + "\t" +
                 student.getFirstName() + "\t" + student.getLastName() + "\t" +
                 student.getEmailAddr());
                 boolean anyGradeItems = false;
+                int ptsPossible = 0;
+                int ptsScored = 0;
                 for (GradeItem grade : gradeItems) {
 
                     if (grade.getStudentId().equals(student.getStudentId())) {
@@ -121,14 +121,25 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
                         grade.getCourseId() + "\t" + grade.getType() + "\t" +
                         grade.getDate() + "\t" + grade.getMaxScore() + "\t" +
                         grade.getScore() + "\t" + (grade.getScore() * 100) /
-                        grade.getMaxScore());
+                        grade.getMaxScore() + "%");
+                        ptsPossible += grade.getMaxScore();
+                        ptsScored += grade.getScore();
                     }
                 }
-                outputFile.println("========================================" +
-                                "========================================");
+                if (anyGradeItems){
+                    outputFile.println("========================================" +
+                                    "========================================");
+                    outputFile.println("Total \t\t\t\t\t\t\t" + ptsPossible + "\t" +
+                    ptsScored + "\t" + (ptsScored * 100)/ptsPossible + "%");
+                }
+                outputFile.println();
             }
         } catch(FileNotFoundException e) {
-            System.err.println("");
+            System.err.println("Unable to write to file " + filename);
+        } finally {
+            if (outputFile != null){
+                outputFile.close();
+            }
         }
     }
 
@@ -183,7 +194,9 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
             processStudentData(line);
         } else if (line[0].equals("GRADE ITEM")) {
             processGradeItemData(line);
-        } // end if
+        } else {
+            System.err.println("Unrecognized first entry: " + line[0]);
+        }// end if
     } // end parseLine
 
 //******************************************************************************
@@ -237,7 +250,7 @@ private static GradeItem makeGradeItem(String[] line) {
             if (newStudent != null) {
                 if (listOfStudents.contains(newStudent)) {
                     System.err.println("Student with identical data already in"
-                     + " the list, skipping. ID=" + newStudent.getStudentId());
+                     + " the list, skipping. ID " + newStudent.getStudentId());
                 } else {
                     if (!listOfStudents.add(newStudent)) {
                         System.err.println("Could not add student to list. ID="+
@@ -297,6 +310,9 @@ private static GradeItem makeGradeItem(String[] line) {
                     if (!listOfGradeItems.add(newGradeItem)) {
                         System.err.println("Error adding GradeItem to list. ID=" +
                         newGradeItem.getGradeId());
+                    } else {
+                        System.out.println("GradeItem added to list with ID "
+                        + newGradeItem.getGradeId());
                     }
                 }
             } else {
