@@ -15,8 +15,13 @@ public class List<T> implements MyCollectionInterface<T> {
     private static final int MAX_CAPACITY = 1000;
     private T[] array;
 
-    public MyList() {
-        array = new T[DEFAULT_CAPACITY];
+    public List() {
+        // This is NOT type-safe! This array must remain encapsulated in this
+        // class so that all access to and from the array is done with the
+        // generic T. When it is output to the user via toArray it is
+        // returned as an Object[].
+        array = (T[]) new Object[DEFAULT_CAPACITY];
+
     }
 
    /**
@@ -27,13 +32,13 @@ public class List<T> implements MyCollectionInterface<T> {
     */
     public boolean add (T newItem) {
 
-        if (size == elements.length) {
+        if (size == array.length) {
             if (!ensureCapacity()) {
                 return false;
             }
         }
 
-        elements[size++] = newItem;
+        array[size++] = newItem;
 
         return true;
 
@@ -87,10 +92,10 @@ public class List<T> implements MyCollectionInterface<T> {
     public boolean remove (T anEntry) {
         for (int i = 0; i<size; i++) {
             if (array[i].equals(anEntry)) {
-                for (int j = i; j < size; j++)​ {
-                    list[j] = list[j + 1];​
+                for (int j = i; j < size; j++) {
+                    array[j] = array[j + 1];
                 }
-                list[size] = null;
+                array[size] = null;
                 size--;
                 return true;
             }
@@ -109,7 +114,7 @@ public class List<T> implements MyCollectionInterface<T> {
      */
     public void clear() {
         size = 0;
-        array = new T[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
  
     //************************************************************************
@@ -178,7 +183,31 @@ public class List<T> implements MyCollectionInterface<T> {
      * Note: If the list is empty, the returned array is empty.
      */
     public Object[] toArray () {
-        return Arrays.copyOfRange(array, 0, size);
+        return Arrays.copyOf(array, size);
+    }
+
+    /**
+     * Retrieves all entries that are in this list and returns them as an array
+     * with the runtime type of the given array. If the given array is long
+     * enough, it is returned with the entries inside it. Otherwise, a new
+     * array is initialized with the same type as the given array. This allows
+     * you to obtain a typed array from this class.
+     * 
+     * @param givenArray
+     * @return
+     */
+    public <T> T[] toArray(T[] givenArray) {
+        // If the given array has insufficient space, create a new one with the
+        // same type.
+        if (givenArray.length < size) {
+            return (T[]) Arrays.copyOf(array, size,
+            givenArray.getClass());
+        }
+
+        // Othewise, copy the data into the given array and return that.
+        System.arraycopy(array, 0, givenArray, 0, size);
+
+        return givenArray;
     }
  
 }

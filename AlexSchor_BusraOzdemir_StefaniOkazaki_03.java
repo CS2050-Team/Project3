@@ -26,7 +26,7 @@ A quote:
 
 /**
  *
- * AlexSchor_BusraOzdemir_StefaniOkazaki_02.java - runs tests on Student and
+ * AlexSchor_BusraOzdemir_StefaniOkazaki_03.java - runs tests on Student and
  * GradeItem classes
  *
  * @author Alex Schor, Busra Ozdemir, Stefani Okazaki
@@ -58,12 +58,12 @@ A quote:
 */
 
  
-public class AlexSchor_BusraOzdemir_StefaniOkazaki_02 {
+public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 
 
     private static List<Student> listOfStudents;
     private static List<GradeItem> listOfGradeItems;
-    private static String INPUT_FILE;
+    private static String INPUT_FILE = "Project_03_Input01.txt";
     private static String OUTPUT_FILE;
     
 
@@ -83,6 +83,41 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_02 {
         generateReport();
     }
 
+
+//******************************************************************************
+
+    public static void generateReport() {
+        Student[] students = listOfStudents.toArray(new Student[]{});
+        GradeItem[] gradeItems = listOfGradeItems.toArray(new GradeItem[]{});
+
+        for (Student student : students) {
+            System.out.println(student.getStudentId() + "\t" +
+            student.getFirstName() + " " + student.getLastName() + "\t" +
+            student.getEmailAddr());
+            System.out.println("Grade Items");
+            for (GradeItem grade : gradeItems) {
+                
+                
+                // System.out.println("GRADE INFORMATION: ");
+				System.out.println("Student Id : " +grade.getStudentId());
+				// System.out.println("Grade Id : " + grade.getGradeId());
+				// System.out.println("Course Id : " + grade.getCourseId());
+				// System.out.println("Item Type: " + grade.getType());
+				// System.out.println("Date : " + grade.getDate());
+				// System.out.println("Max Score : " + grade.getMaxScore());
+                // System.out.println("Actual Score : " + grade.getScore());
+
+
+                if (grade.getStudentId().equals(student.getStudentId())) {
+                    System.out.println("\t" + grade.getGradeId() + "\t" +
+                    grade.getCourseId() + "\t" + grade.getType() + "\t" +
+                    grade.getDate() + "\t" + grade.getMaxScore() + "\t" +
+                    grade.getScore() + "\t" + (grade.getScore() * 100) /
+                    grade.getMaxScore());
+                }
+            }
+        }
+    }
 
 //******************************************************************************
 
@@ -139,7 +174,7 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_02 {
 
 private static Student makeStudent(String[] line) {
         try {
-            newStudent = new Student(line[2], line[3], line[4],
+            Student newStudent = new Student(line[2], line[3], line[4],
             line[5]);
             return newStudent;
             
@@ -152,10 +187,10 @@ private static Student makeStudent(String[] line) {
     
 //******************************************************************************
     
-private static Student makeGradeItem(String[] line) {
+private static GradeItem makeGradeItem(String[] line) {
     try {
-        newGradeItem = new GradeItem(line[2], line[3], line[4],
-        line[5]);
+        GradeItem newGradeItem = new GradeItem(line[2], line[4], line[3],
+        line[5], line[6], line[7], line[8]);
         return newGradeItem;
         
     } catch( IllegalArgumentException e) {
@@ -183,7 +218,7 @@ private static Student makeGradeItem(String[] line) {
             // If it was created successfully, check if it is in the list and
             // add it if not
 
-            if (newStudent) {
+            if (newStudent!=null) {
                 if (listOfStudents.contains(newStudent)) {
                     System.err.println("Student with identical data already in"
                      + " the list. ID=" + newStudent.getStudentId());
@@ -200,16 +235,16 @@ private static Student makeGradeItem(String[] line) {
             Student studentToDelete = makeStudent(line);
 
 
-            if (studentToDelete) {
-                if (!list.remove(studentToDelete)) {
+            if (studentToDelete!=null) {
+                if (!listOfStudents.remove(studentToDelete)) {
                     System.err.println("Student not found in list. ID=" +
-                    newStudent.getStudentId());
+                    studentToDelete.getStudentId());
                 }
             }
 
 
         } else {
-            printer.out("Unrecognized command for Student: " + line[1]);
+            System.out.println("Unrecognized command for Student: " + line[1]);
         }
 
 
@@ -232,36 +267,36 @@ private static Student makeGradeItem(String[] line) {
             // If it was created successfully, check if it is in the list and
             // add it if not
 
-            if (newGradeItem) {
+            if (newGradeItem!=null) {
                 if (listOfGradeItems.contains(newGradeItem)) {
                     System.err.println("GradeItem with identical data already in"
-                     + " the list. ID=" + newGradeItem.getGradeItemId());
+                     + " the list. ID=" + newGradeItem.getGradeId());
                 } else {
                     if (!listOfGradeItems.add(newGradeItem)) {
                         System.err.println("Error adding GradeItem to list. ID=" +
-                        newGradeItem.getGradeItemId());
+                        newGradeItem.getGradeId());
                     }
                 }
             }
 
         } else if (line[1].equals("DEL")) {
             
-            GradeItem GradeItemToDelete = makeGradeItem(line);
+            GradeItem gradeItemToDelete = makeGradeItem(line);
 
 
-            if (GradeItemToDelete) {
-                if (!list.remove(GradeItemToDelete)) {
+            if (gradeItemToDelete!=null) {
+                if (!listOfGradeItems.remove(gradeItemToDelete)) {
                     System.err.println("GradeItem not found in list. ID=" +
-                    newGradeItem.getGradeItemId());
+                    gradeItemToDelete.getGradeId());
                 }
             }
 
 
         } else {
-            printer.out("Unrecognized command for GradeItem: " + line[1]);
+            System.out.println("Unrecognized command for GradeItem: " + line[1]);
         }
 
 
     }  // end processGradeItemData
 
-} // end AlexSchor_BusraOzdemir_StefaniOkazaki_02 class
+} // end AlexSchor_BusraOzdemir_StefaniOkazaki_03 class
