@@ -3,8 +3,14 @@ import java.util.Arrays;
 import javax.swing.text.html.parser.Entity;
 
 /**
- * List
+ *
+ * List.java - an array/list implementation of the Collection ADT
+ * 
+ * @author Alex Schor
+ * @version 1.0
+ *
  */
+
 
 
 public class List<T> implements MyCollectionInterface<T> {
@@ -18,11 +24,12 @@ public class List<T> implements MyCollectionInterface<T> {
     public List() {
         // This is NOT type-safe! This array must remain encapsulated in this
         // class so that all access to and from the array is done with the
-        // generic T. When it is output to the user via toArray it is
-        // returned as an Object[].
+        // generic T. When it is output to the user via toArray the type must
+        // be specified by the user.
+        
         array = (T[]) new Object[DEFAULT_CAPACITY];
 
-    }
+    } // end construtor
 
    /**
     * Adds a new entry to this list
@@ -35,15 +42,14 @@ public class List<T> implements MyCollectionInterface<T> {
         if (size == array.length) {
             if (!ensureCapacity()) {
                 return false;
-            }
-        }
+            } // end if
+        } // end if
 
         array[size++] = newItem;
 
         return true;
 
-
-    }
+    } // end add method
     
     //************************************************************************
     
@@ -56,12 +62,12 @@ public class List<T> implements MyCollectionInterface<T> {
                     newCapacity = MAX_CAPACITY;
                 } else {
                     return false;
-                }
-            }
+                } // end if
+            } // end if
             array = Arrays.copyOf(array, newCapacity);
-        }
+        } // end if
         return true;
-    }
+    } // end ensureCapacity method
     
     
     //************************************************************************
@@ -74,12 +80,12 @@ public class List<T> implements MyCollectionInterface<T> {
     public T remove () {
         if (size == 0) {
             return null;
-        }
+        } // end if
         size--;
         T removed = array[size];
         array[size] = null;
         return removed;
-    };
+    } // end remove method
  
     //************************************************************************
  
@@ -98,11 +104,11 @@ public class List<T> implements MyCollectionInterface<T> {
                 array[size] = null;
                 size--;
                 return true;
-            }
-        }
+            } // end if
+        } // end for
     
         return false;
-    }
+    } // end remove method
 
 
     
@@ -115,7 +121,7 @@ public class List<T> implements MyCollectionInterface<T> {
     public void clear() {
         size = 0;
         array = (T[]) new Object[DEFAULT_CAPACITY];
-    }
+    } // end clear method
  
     //************************************************************************
  
@@ -126,7 +132,7 @@ public class List<T> implements MyCollectionInterface<T> {
      */
     public int getCurrentSize() {
         return size;
-    }
+    } // end getCurrentSize method
  
     //************************************************************************
  
@@ -137,7 +143,7 @@ public class List<T> implements MyCollectionInterface<T> {
      */
     public boolean isEmpty() {
         return (size==0);
-    }
+    } // end isEmpty method
  
     //************************************************************************
  
@@ -152,10 +158,10 @@ public class List<T> implements MyCollectionInterface<T> {
         for (T entry : array) {
             if (entry==anEntry) {
                 count++;
-            }
-        }
+            } // end if
+        } // end for
         return count;
-    }
+    } // end getFrequencyOf method
  
     //************************************************************************
  
@@ -169,10 +175,10 @@ public class List<T> implements MyCollectionInterface<T> {
         for (T entry : array) {
             if (entry !=  null && entry.equals(anEntry)) {
                 return true;
-            }
-        }
+            } // end if
+        } // end for
         return false;
-    }
+    } // end contains method
  
     //************************************************************************
  
@@ -184,7 +190,7 @@ public class List<T> implements MyCollectionInterface<T> {
      */
     public Object[] toArray () {
         return Arrays.copyOf(array, size);
-    }
+    } // end toArray method
 
     /**
      * Retrieves all entries that are in this list and returns them as an array
@@ -194,7 +200,7 @@ public class List<T> implements MyCollectionInterface<T> {
      * you to obtain a typed array from this class.
      * 
      * @param givenArray
-     * @return
+     * @return a typed array of the contents of the list
      */
     public <T> T[] toArray(T[] givenArray) {
         // If the given array has insufficient space, create a new one with the
@@ -202,12 +208,12 @@ public class List<T> implements MyCollectionInterface<T> {
         if (givenArray.length < size) {
             return (T[]) Arrays.copyOf(array, size,
             givenArray.getClass());
-        }
+        } // end if
 
         // Othewise, copy the data into the given array and return that.
         System.arraycopy(array, 0, givenArray, 0, size);
 
         return givenArray;
-    }
+    } // end toArray(givenArray) method
  
 }
