@@ -85,7 +85,8 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
         try{
             outputFile = new PrintStream(filename);
             Student[] students = listOfStudents.toArray(new Student[]{});
-            GradeItem[] gradeItems = listOfGradeItems.toArray(new GradeItem[]{});
+            GradeItem[] gradeItems = listOfGradeItems.toArray(new
+                                        GradeItem[]{});
 
             for (Student student : students) {
                 outputFile.println(student.getStudentId() + "\t" +
@@ -111,10 +112,11 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
                     } // end if
                 } // end for
                 if (anyGradeItems){
-                    outputFile.println("========================================" +
+                    outputFile.println("====================================" +
                                     "========================================");
-                    outputFile.println("Total \t\t\t\t\t\t\t" + ptsPossible + "\t" +
-                    ptsScored + "\t" + (ptsScored * 100)/ptsPossible + "%");
+                    outputFile.println("Total \t\t\t\t\t\t\t" + ptsPossible +
+                    "\t" + ptsScored + "\t" + (ptsScored * 100)/ptsPossible +
+                    "%");
                 } // end if
                 outputFile.println();
             } // end for
@@ -204,7 +206,7 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
         return null;
     }// end method makeStudent
         
-    //******************************************************************************
+    //**************************************************************************
     
 
     /**
@@ -306,12 +308,12 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
             // add it if not. Give a message if there was an error.
             if (newGradeItem!=null) {
                 if (listOfGradeItems.contains(newGradeItem)) {
-                    System.err.println("GradeItem with identical data already in"
-                     + " the list. ID=" + newGradeItem.getGradeId());
+                    System.err.println("GradeItem with identical data already"
+                     + " in the list. ID=" + newGradeItem.getGradeId());
                 } else {
                     if (!listOfGradeItems.add(newGradeItem)) {
-                        System.err.println("Error adding GradeItem to list. ID=" +
-                        newGradeItem.getGradeId());
+                        System.err.println("Error adding GradeItem to list. ID="
+                        + newGradeItem.getGradeId());
                     } else {
                         System.out.println("GradeItem added to list with ID "
                         + newGradeItem.getGradeId());
@@ -341,7 +343,8 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 
 
         } else {
-            System.out.println("Unrecognized command for GradeItem: " + line[1]);
+            System.out.println("Unrecognized command for GradeItem: " +
+                                line[1]);
         } // end if
 
 
