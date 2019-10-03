@@ -167,7 +167,7 @@ public class List<T> implements MyCollectionInterface<T> {
      */
     public boolean contains (T anEntry) {
         for (T entry : array) {
-            if (entry==anEntry) {
+            if (entry !=  null && entry.equals(anEntry)) {
                 return true;
             }
         }

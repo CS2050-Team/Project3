@@ -66,13 +66,12 @@ public class Student {
         if (isEmpty(emailAddr)) {
             error += "Email address not provided\n";
         } else if (!emailAddr.contains("@")) {
-            error += "Invalid email address (does not contain @)\n";
+            error += "Invalid email address " + emailAddr + " (does not contain @)\n";
         } // End if
 
         // If any of the above were true, error now contains 1 or more messages
         if (error.length() > 0) {
-            throw new IllegalArgumentException("The following errors were" +
-                    " present: \n" + error);
+            throw new IllegalArgumentException(error.trim());
         } // End if
 
         this.studentId = studentId;

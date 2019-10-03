@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.io.PrintStream;
 
 /*
 
@@ -63,7 +64,7 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 
     private static List<Student> listOfStudents;
     private static List<GradeItem> listOfGradeItems;
-    private static String INPUT_FILE = "Project_03_Input01.txt";
+    private static String INPUT_FILE;
     private static String OUTPUT_FILE;
     
 
@@ -76,46 +77,58 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
      */
 
     public static void main(String[] args) {
+
+        String file_suffix = "";
+        file_suffix = FileNumber.getFileNumber(args, "Command Line");
+
+        INPUT_FILE = "Project_03_Input" + file_suffix + ".txt";
+
         listOfStudents = new List<Student>();
         listOfGradeItems = new List<GradeItem>();
         
         processInput(INPUT_FILE);
-        generateReport();
+
+        OUTPUT_FILE = "Generating report to Project_03_Output" + file_suffix +
+                        ".txt...  ";
+        System.out.print(OUTPUT_FILE);
+        generateReport(OUTPUT_FILE);
+        System.out.println("done.");
     }
 
 
 //******************************************************************************
 
-    public static void generateReport() {
-        Student[] students = listOfStudents.toArray(new Student[]{});
-        GradeItem[] gradeItems = listOfGradeItems.toArray(new GradeItem[]{});
+    public static void generateReport(String filename) {
+        try{
+            PrintStream outputFile = new PrintStream(filename);
+            Student[] students = listOfStudents.toArray(new Student[]{});
+            GradeItem[] gradeItems = listOfGradeItems.toArray(new GradeItem[]{});
+            outputFile.println("========================================" +
+            "========================================");
+            for (Student student : students) {
+                outputFile.println(student.getStudentId() + "\t" +
+                student.getFirstName() + "\t" + student.getLastName() + "\t" +
+                student.getEmailAddr());
+                boolean anyGradeItems = false;
+                for (GradeItem grade : gradeItems) {
 
-        for (Student student : students) {
-            System.out.println(student.getStudentId() + "\t" +
-            student.getFirstName() + " " + student.getLastName() + "\t" +
-            student.getEmailAddr());
-            System.out.println("Grade Items");
-            for (GradeItem grade : gradeItems) {
-                
-                
-                // System.out.println("GRADE INFORMATION: ");
-				System.out.println("Student Id : " +grade.getStudentId());
-				// System.out.println("Grade Id : " + grade.getGradeId());
-				// System.out.println("Course Id : " + grade.getCourseId());
-				// System.out.println("Item Type: " + grade.getType());
-				// System.out.println("Date : " + grade.getDate());
-				// System.out.println("Max Score : " + grade.getMaxScore());
-                // System.out.println("Actual Score : " + grade.getScore());
-
-
-                if (grade.getStudentId().equals(student.getStudentId())) {
-                    System.out.println("\t" + grade.getGradeId() + "\t" +
-                    grade.getCourseId() + "\t" + grade.getType() + "\t" +
-                    grade.getDate() + "\t" + grade.getMaxScore() + "\t" +
-                    grade.getScore() + "\t" + (grade.getScore() * 100) /
-                    grade.getMaxScore());
+                    if (grade.getStudentId().equals(student.getStudentId())) {
+                        if (!anyGradeItems) {
+                            outputFile.println("Grade Items:");
+                            anyGradeItems = true;
+                        }
+                        outputFile.println("\t" + grade.getGradeId() + "\t" +
+                        grade.getCourseId() + "\t" + grade.getType() + "\t" +
+                        grade.getDate() + "\t" + grade.getMaxScore() + "\t" +
+                        grade.getScore() + "\t" + (grade.getScore() * 100) /
+                        grade.getMaxScore());
+                    }
                 }
+                outputFile.println("========================================" +
+                                "========================================");
             }
+        } catch(FileNotFoundException e) {
+            System.err.println("");
         }
     }
 
@@ -137,10 +150,13 @@ public class AlexSchor_BusraOzdemir_StefaniOkazaki_03 {
 
             scanner = new Scanner(new File(filename));
 
+            System.out.println("Reading data from file " + filename);
+            
             while (scanner.hasNext()) {
                 String[] words = scanner.nextLine().split(",");
                 parseLine(words);
             } // end while
+
 
         } catch (FileNotFoundException e) {
 
@@ -179,8 +195,8 @@ private static Student makeStudent(String[] line) {
             return newStudent;
             
         } catch( IllegalArgumentException e) {
-            System.out.println("Error initializing Student, skipping:");
-            System.out.println(e.getMessage());
+            System.err.println("Error initializing Student, skipping:");
+            System.err.println(e.getMessage().replaceAll("(?m)^", "\t"));
         }
         return null;
     }
@@ -194,8 +210,8 @@ private static GradeItem makeGradeItem(String[] line) {
         return newGradeItem;
         
     } catch( IllegalArgumentException e) {
-        System.out.println("Error initializing GradeItem, skipping:");
-        System.out.println(e.getMessage());
+        System.err.println("Error initializing GradeItem, skipping:");
+        System.err.println(e.getMessage().replaceAll("(?m)^", "\t"));
     }
     return null;
 }
@@ -218,14 +234,17 @@ private static GradeItem makeGradeItem(String[] line) {
             // If it was created successfully, check if it is in the list and
             // add it if not
 
-            if (newStudent!=null) {
+            if (newStudent != null) {
                 if (listOfStudents.contains(newStudent)) {
                     System.err.println("Student with identical data already in"
-                     + " the list. ID=" + newStudent.getStudentId());
+                     + " the list, skipping. ID=" + newStudent.getStudentId());
                 } else {
                     if (!listOfStudents.add(newStudent)) {
-                        System.err.println("Error adding student to list. ID=" +
+                        System.err.println("Could not add student to list. ID="+
                         newStudent.getStudentId());
+                    } else {
+                        System.out.println("Student added to list with ID "
+                        + newStudent.getStudentId());
                     }
                 }
             }
@@ -239,6 +258,9 @@ private static GradeItem makeGradeItem(String[] line) {
                 if (!listOfStudents.remove(studentToDelete)) {
                     System.err.println("Student not found in list. ID=" +
                     studentToDelete.getStudentId());
+                } else {
+                    System.out.println("Student removed from list with ID " +
+                                        studentToDelete.getStudentId());
                 }
             }
 
@@ -277,6 +299,8 @@ private static GradeItem makeGradeItem(String[] line) {
                         newGradeItem.getGradeId());
                     }
                 }
+            } else {
+                System.out.println("Student was not added to the list");
             }
 
         } else if (line[1].equals("DEL")) {
@@ -288,6 +312,9 @@ private static GradeItem makeGradeItem(String[] line) {
                 if (!listOfGradeItems.remove(gradeItemToDelete)) {
                     System.err.println("GradeItem not found in list. ID=" +
                     gradeItemToDelete.getGradeId());
+                } else {
+                    System.out.println("GradeItem removed from list with ID " +
+                                        gradeItemToDelete.getGradeId());
                 }
             }
 
