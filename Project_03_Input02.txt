@@ -1,0 +1,13 @@
+STUDENT,ADD,900123459,Bobby,Johnson,bobbyjohnson@msudenver.edu
+STUDENT,DEL,900123456,Joe,Doe,joedeo@msudenver.edu
+STUDENT,ADD,900123456,Joe,Doe,joedeo@msudenver.edu
+GRADEITEM,DEL,1,900123456,23456,HW,20190112,100,95
+STUDENT,ADD,900123434,Billy,Joe,billyjoe@msudenver.edu
+STDUENT,ADD,900123458,Mary,Smith,marysmith@msudenver.edu
+STDUENT,ADD,900123458,David,Smith,davidsmith@msudenver.edu
+GRADEITEM,ADD,2,900123456,23456,Test,20190113,100,75
+GRADEITEM,ADD,3,900123456,23456,HW,20190114,100,95
+STUDENT,ADD,900123456,Sarah,Betty,sarahbetty@msudenver.edu
+STUDENT,DEL,900123456,Joe,Doe,joedeo@msudenver.edu
+GRADEITEM,DEL,1,900123456,23456,HW,20190112,100,95
+STUDENT,DEL,900123456,Sarah,Betty,sarahbetty@msudenver.edu
